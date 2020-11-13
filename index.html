@@ -11,14 +11,17 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="">
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"
         integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA=="
         crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <h1>Six Degrees of content separation </h1>
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
@@ -41,7 +44,8 @@
         let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/pause");
 
         function setup() {
-            createCanvas(800, 800);
+            createCanvas(windowWidth, windowHeight);
+
             console.log("loaded script")
             // let serverUrl = "https://newhorizonsserver.herokuapp.com".replace(/^http/, 'ws')
 
@@ -56,6 +60,10 @@
         var r = 0;
         var g = 0;
         ;
+
+        function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
         function draw() {
 
             // background(r, g, 100);
