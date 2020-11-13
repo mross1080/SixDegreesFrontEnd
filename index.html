@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"
+        integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA=="
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1>Six Degrees of content separation </h1>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <script>
+
+
+
+
+
+        let serverUrl = "ws://localhost:3000"
+        let clientRandomId = "34"
+
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+        const phone_id = urlParams.get('phone_id')
+        console.log(phone_id);
+        // shirt
+        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/pause");
+
+        function setup() {
+            createCanvas(800, 800);
+            console.log("loaded script")
+            // let serverUrl = "https://newhorizonsserver.herokuapp.com".replace(/^http/, 'ws')
+
+            socketServer.onopen = function (event) {
+                socketServer.send("Ready!!!!");
+            };
+
+
+        }
+
+
+        var r = 0;
+        var g = 0;
+        ;
+        function draw() {
+
+            // background(r, g, 100);
+            textSize(32);
+
+            socketServer.onmessage = (event) => {
+//                 let c = color("white");
+// fill(c);
+// noStroke();
+//                 rect(0, 0, 800, 800);
+background("white");
+                // erase();
+                console.log("Got message")
+                console.log(event)
+                var msg = event.data;
+                // fill(0, 102, 153, 51);
+                text(msg, 10, 90);
+                textSize(32);
+
+                text(msg)
+                // fill(0, 102, 153);
+                setTimeout(function(){
+                    text("Its okay ")
+                    console.log("you good?")
+                    background("black")
+// let c = color(255, 204, 0);
+// fill(c);
+// noStroke();
+// rect(0, 0, 800, 800);
+
+                },1500)
+                
+            }
+            r++;
+            // g++;
+            if (r > 255) {
+                r = 0;
+            }
+
+
+        }
+
+    </script>
+</body>
+
+</html>
