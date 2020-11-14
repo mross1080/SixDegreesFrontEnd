@@ -65,12 +65,15 @@
 
 
         function chooseRandomDirection() {
-            return int(random(0, 4))
+            return int(random(0, 1))
         }
 
         var r = 0;
         var g = 0;
         ;
+
+        var xVals = []
+        var yVals = []
 
         function windowResized() {
             resizeCanvas(windowWidth, windowHeight);
@@ -85,7 +88,16 @@
             // background(r, g, 100);
             background(200);
             textSize(width / 10);
+
+            // for (var y =0; y < 3; y++) {
+
+                
+            // }
             text(word, x, y);
+            //   for (var z =1; z < 3; z++) {
+            //     text(word, x- (320*z) , y);
+                
+            // }
             // text(word, x1, y1);
             // text(word, x2, y2);
 
@@ -101,29 +113,31 @@
 
 
                     
-                } else if (direction == 1) {
-                    if(y < height) {
-                       completeAnimationCycle()
-                    } else {
-                        y = y + 4;
-                    }
+                } 
+                
+                // else if (direction == 1) {
+                //     if(y < height) {
+                //        completeAnimationCycle()
+                //     } else {
+                //         y = y + 4;
+                //     }
                     
-                } else if (direction == 2) {
-                    if(x < width) {
-                       completeAnimationCycle()
-                    } else {
-                        x = x + 4;
-                    }
+                // } else if (direction == 2) {
+                //     if(x < width) {
+                //        completeAnimationCycle()
+                //     } else {
+                //         x = x + 4;
+                //     }
                     
                    
-                } else if (direction == 3) {
+                // } else if (direction == 3) {
                    
-                    if(x < 0) {
-                       completeAnimationCycle()
-                    } else {
-                        x = x - 4;
-                    }
-                }
+                //     if(x < 0) {
+                //        completeAnimationCycle()
+                //     } else {
+                //         x = x - 4;
+                //     }
+                // }
 
             }
 
