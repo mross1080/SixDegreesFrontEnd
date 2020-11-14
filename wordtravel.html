@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"
+        integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA=="
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <script>
+
+
+
+
+        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        // let serverUrl = "ws://localhost:3000"
+        let clientRandomId = "34"
+        let animationIsActive = false;
+
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+        const phone_id = urlParams.get('phone_id')
+        console.log(phone_id);
+        // shirt
+        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/travel");
+        console.log(serverUrl + "/" + phone_id + "/travel")
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            // frameRate(30);
+            console.log("Completed p5 setup")
+            // let serverUrl = "https://newhorizonsserver.herokuapp.com".replace(/^http/, 'ws')
+
+            socketServer.onopen = function (event) {
+                socketServer.send("Ready!!!!");
+            };
+
+            textFont('sans-serif');
+            // Starts in the middle
+            x = width / 2;
+            y = height;
+            word = ""
+        }
+
+
+
+        function chooseRandomDirection() {
+            return int(random(0, 4))
+        }
+
+        var r = 0;
+        var g = 0;
+        ;
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        function completeAnimationCycle() {
+            animationIsActive = false
+                        socketServer.send("Words|DONE");
+        }
+        function draw() {
+
+            // background(r, g, 100);
+            background(200);
+            textSize(width / 10);
+            text(word, x, y);
+
+
+            if (animationIsActive) {
+                if (direction == 0) {
+
+                    if(y < 0) {
+                       completeAnimationCycle()
+                    } else {
+                        y = y - 4;
+                    }
+
+
+                    
+                } else if (direction == 1) {
+                    if(y < height) {
+                       completeAnimationCycle()
+                    } else {
+                        y = y + 4;
+                    }
+                    
+                } else if (direction == 2) {
+                    if(x < width) {
+                       completeAnimationCycle()
+                    } else {
+                        x = x + 4;
+                    }
+                    
+                   
+                } else if (direction == 3) {
+                   
+                    if(x < 0) {
+                       completeAnimationCycle()
+                    } else {
+                        x = x - 4;
+                    }
+                }
+
+            }
+
+
+            // Reset to the bottom
+            if (y < 0 && animationIsActive) {
+                console.log("Animation done")
+                animationIsActive = false
+
+                socketServer.send("Words|DONE");
+            }
+
+            socketServer.onmessage = (event) => {
+                console.log("GOT A MESSAGE", event.data)
+                var data_split = event.data.split("|")
+                if (data_split[0] == "Start") {
+
+                    direction = chooseRandomDirection()
+
+                    if (direction == 0) {
+                        y = height;
+                        x = width/2;
+                    } else if (direction == 1) {
+                        y = 0;
+                        x = width/2;
+                    } else if (direction == 2) {
+                        x = 0;
+                        y = height/2;
+                    } else if (direction == 3) {
+                        x = width;
+                        y = height/2;
+                    }
+
+                    word = data_split[1]
+                    // y = height;
+                    console.log("Starting animation")
+                    animationIsActive = true;
+                }
+            }
+
+
+
+        }
+
+    </script>
+</body>
+
+</html>

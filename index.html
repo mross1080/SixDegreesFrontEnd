@@ -31,8 +31,8 @@
 
 
 
-        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
-        // let serverUrl = "ws://localhost:3000"
+        // let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        let serverUrl = "ws://localhost:3000"
         let clientRandomId = "34"
 
         const queryString = window.location.search;
@@ -41,7 +41,7 @@
         const phone_id = urlParams.get('phone_id')
         console.log(phone_id);
         // shirt
-        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/pause");
+        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/sequential");
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
