@@ -31,8 +31,8 @@
 
 
 
-        // let serverUrl = "wss://sixdegreesserver.herokuapp.com"
-        let serverUrl = "ws://localhost:3000"
+        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        // let serverUrl = "ws://localhost:3000"
         let clientRandomId = "34"
 
         const queryString = window.location.search;
@@ -54,14 +54,15 @@
                 socketServer.send("Ready!!!!");
             };
 
-            bg = loadImage('assets/1.jpg');
-            b1 = loadImage('assets/2.jpg');
-            b2 = loadImage('assets/3.jpg');
+            b6 = loadImage('assets/stc/6.jpg');
+            b1 = loadImage('assets/stc/1.jpg');
 
-            b3 = loadImage('assets/4.jpg');
-            b4 = loadImage('assets/5.jpg');
+            b2 = loadImage('assets/stc/2.jpg');
+            b3 =  loadImage('assets/stc/3.jpg');
+            b4 =  loadImage('assets/stc/4.jpg');
+            b5 =  loadImage('assets/stc/5.jpg');
 
-            bgs = [bg,b1,b2,b3,b4]
+            bgs = [b1,b2,b3,b4,b5,b6]
 
         }
 
@@ -77,23 +78,29 @@
 }
         function draw() {
 
-            // background(r, g, 100);
+
             textSize(32);
 
             socketServer.onmessage = (event) => {
-//                 let c = color("white");
-// fill(c);
-// noStroke();
-//                 rect(0, 0, 800, 800);
-// background("white");
-                // erase();
+
                 console.log("Got message")
                 console.log(event.data)
-                var msg = int(event.data);
+
+
+                if (event.data == "RESET") {
+                    background("black")
+                } else {
+
+                
+
+                var msg_split = event.data.split("|")
+                var msg = int(msg_split[0]);
+                var photoTimeout = int(msg_split[1])
+                var photoIndex = int(msg_split[2])
                 // background(random(0, 255),random(0, 255),random(0, 255));
-                var index = int(random(0,4))
-                console.log(index)
-                var back = bgs[index]
+                // var index = int(random(0,4))
+                console.log(photoIndex)
+                var back = bgs[photoIndex]
                 background(back)
                 // fill(0, 102, 153, 51);
                 // background(34,int(msg.data),222);
@@ -103,17 +110,14 @@
 
                 text(msg)
                 // fill(0, 102, 153);
-                setTimeout(function(){
-                    text("Its okay ")
-                    console.log("you good?")
-                    background("black")
-// let c = color(255, 204, 0);
-// fill(c);
-// noStroke();
-// rect(0, 0, 800, 800);
+                // setTimeout(function(){
+                //     text("Its okay ")
+                //     console.log("you good?")
+                //     background("black")
 
-                },1500)
-                
+
+                // },photoTimeout)
+                }
             }
             r++;
             // g++;
