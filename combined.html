@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"
+        integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA=="
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <script>
+
+
+
+
+        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        // let serverUrl = "ws://localhost:3000"
+        let clientRandomId = "34"
+
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+        const phone_id = urlParams.get('phone_id')
+        console.log(phone_id);
+        // shirt
+        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/combined");
+        let bg;
+        let bgs = []
+        let animationIsActive = false;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+
+            console.log("loaded script")
+            // let serverUrl = "https://newhorizonsserver.herokuapp.com".replace(/^http/, 'ws')
+
+            socketServer.onopen = function (event) {
+                socketServer.send("Ready!!!!");
+            };
+
+            b6 = loadImage('assets/stc/6.jpg');
+            b1 = loadImage('assets/sleepyjoe/trump.png');
+
+            b2 = loadImage('assets/sleepyjoe/sleepyjoe.png');
+            b3 = loadImage('assets/stc/3.jpg');
+            b4 = loadImage('assets/stc/4.jpg');
+            b5 = loadImage('assets/stc/5.jpg');
+
+            bgs = [b1, b2, b3, b4, b5, b6]
+            x = width / 2;
+            y = height;
+            word = ""
+        }
+        var imgBackground = ""
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+        function chooseRandomDirection() {
+            return int(random(0, 1))
+        }
+
+        function completeAnimationCycle() {
+            animationIsActive = false
+                        socketServer.send("Words|DONE");
+        }
+        function draw() {
+
+
+            if (animationIsActive) {
+                background("black")
+                
+            
+            fill("white");
+            textSize(width / 10);
+            text(word, x, y);
+            fill("white");
+            
+
+
+                // background(200);
+                if (direction == 0) {
+
+                    if(y < 0) {
+                       completeAnimationCycle()
+                    } else {
+                        y = y - 14;
+                    }
+
+
+                    
+                } 
+
+            }
+                
+
+            socketServer.onmessage = (event) => {
+                var msg_split = event.data.split("|")
+                console.log("Got message")
+                console.log(event.data)
+
+
+                if (event.data == "RESET") {
+                    background("black");
+
+                } else if(msg_split[0]=="SETUP") {
+
+                    imgBackground = loadImage(`assets/${msg_split[1]}/${msg_split[2]}.png`)
+                
+                } else {
+
+                    console.log("Choosing new route")
+
+                    var animation = msg_split[0]
+                    if (animation == "IMGS") {
+                        console.log("In image animation")
+                        var msg = int(msg_split[1]);
+                        var photoTimeout = int(msg_split[2])
+                        var hashtagName = msg_split[3]
+                        var photoIndex = 0
+                        console.log("HASHTAG NAME : ", hashtagName)
+
+                        console.log("photo index", photoIndex)
+                        var back = bgs[photoIndex]
+                        // console.log(`assets/sleepyjoe/${hashtagName}.png`)
+                        // var back =  loadImage(`assets/sleepyjoe/${hashtagName}.png`);
+                        background(imgBackground)
+
+                        text(msg, 10, 90);
+                        textSize(32);
+
+                        text(msg)
+
+
+
+
+                    } else if (animation == "WORDS") {
+                     
+                        console.log("STARTING WORDS");
+                        if (msg_split[1] == "Start") {
+
+                            direction = chooseRandomDirection()
+
+                            if (direction == 0) {
+                                y = height;
+                                x = width / 2;
+                            } else if (direction == 1) {
+                                y = 0;
+                                x = width / 2;
+                            } else if (direction == 2) {
+                                x = 0;
+                                y = height / 2;
+                            } else if (direction == 3) {
+                                x = width;
+                                y = height / 2;
+                            }
+
+                            word = msg_split[2]
+                            // y = height;
+                            console.log("Starting animation")
+                            animationIsActive = true;
+                        }
+
+                    }
+
+                }
+            }
+
+        
+        }
+
+    </script>
+</body>
+
+</html>
