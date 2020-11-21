@@ -31,8 +31,8 @@
 
 
 
-        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
-        // let serverUrl = "ws://localhost:3000"
+        // let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        let serverUrl = "ws://localhost:3000"
         let clientRandomId = "34"
 
         const queryString = window.location.search;
@@ -91,7 +91,6 @@
             fill("white");
             textSize(width / 10);
             text(word, x, y);
-            fill("white");
             
 
 
@@ -145,10 +144,14 @@
                         // var back =  loadImage(`assets/sleepyjoe/${hashtagName}.png`);
                         background(imgBackground)
 
-                        text(msg, 10, 90);
-                        textSize(32);
+                        // text(hashtagName, 10, 90);
+                        // textSize(32);
 
-                        text(msg)
+                        // text(hashtagName)
+
+                        fill("black");
+            textSize(width / 10);
+            text(hashtagName, 10, 90);
 
 
 
@@ -176,6 +179,7 @@
 
                             word = msg_split[2]
                             // y = height;
+                         
                             console.log("Starting animation")
                             animationIsActive = true;
                         }
