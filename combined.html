@@ -121,6 +121,8 @@
                     background("black");
 
                 } else if(msg_split[0]=="SETUP") {
+                    console.log("Got a setup message loading")
+                    console.log(`assets/${msg_split[1]}/${msg_split[2]}.png`)
 
                     imgBackground = loadImage(`assets/${msg_split[1]}/${msg_split[2]}.png`)
                 
