@@ -39,15 +39,15 @@
         const queryString = window.location.search;
         console.log(queryString);
         const urlParams = new URLSearchParams(queryString);
-        var iterate_speed = Number(urlParams.get('p'))
+        var cid = Number(urlParams.get('p'))
 
-        if (iterate_speed == "") {
-            iterate_speed = 2
+        if (cid == "") {
+            cid = 2
         }
 
         // shirt
-        let socketServer = new WebSocket(serverUrl + "/" + iterate_speed + "/travel");
-        console.log(serverUrl + "/" + iterate_speed + "/travel")
+        let socketServer = new WebSocket(serverUrl + "/" + cid + "/travel");
+        console.log(serverUrl + "/" + cid + "/travel")
         var img_paths = [
             'assets/stopthesteal/7life.png',
             'assets/stopthesteal/assaultrifle.png',
@@ -133,7 +133,7 @@
             socketServer.send("Words|DONE");
             background("black")
         }
-
+        var iterate_speed = 4
         var direction = 2
         var x1 = 0
         function draw() {
@@ -191,8 +191,6 @@
                         y = y - 4;
                     }
 
-
-
                 }
 
                 if (direction == 2) {
@@ -240,6 +238,8 @@
                 var data_split = event.data.split("|")
                 if (data_split[1] == "Start" || data_split[0] == "SETUP") {
 
+                    iterate_speed = Number(data_split[3])
+                    console.log(iterate_speed)
                     index = Math.floor(Math.random() * bgs.length - 1);
                     console.log("NEW INDEX SHOULD BE ", index)
                     try {
