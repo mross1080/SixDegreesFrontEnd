@@ -65,7 +65,8 @@
 
 
         function chooseRandomDirection() {
-            return int(random(0, 1))
+            // return int(random(0, 1))
+            return 2
         }
 
         var r = 0;
@@ -83,24 +84,26 @@
             animationIsActive = false
                         socketServer.send("Words|DONE");
         }
+
+        var direction = 2
+        var x1 =0
         function draw() {
 
             // background(r, g, 100);
-            background(200);
-            textSize(width / 10);
+            // background(200);
+            // textSize(width / 10);
+            // fill("black")
+            // // for (var y =0; y < 3; y++) {
 
-            // for (var y =0; y < 3; y++) {
+            //     print(x)
+  background("black");
+  textSize(width / 10);
+fill("white")
 
-                
+
             // }
-            text(word, x, y);
-            //   for (var z =1; z < 3; z++) {
-            //     text(word, x- (320*z) , y);
-                
-            // }
-            // text(word, x1, y1);
-            // text(word, x2, y2);
-
+            text(word, x, 100 +Math.floor(Math.random() * 600) + 1);
+       
 
             if (animationIsActive) {
                 if (direction == 0) {
@@ -115,20 +118,26 @@
                     
                 } 
                 
+                if (direction == 2) {
+                   
+                   if(x > (width - 10)) {
+                      console.log("Done")
+                       completeAnimationCycle()
+                   } else {
+                  
+                       console.log("increasing x!")
+                   print(width)
+                   console.log(x)
+                       x = x + 4;
+                   }
+                    
+                }  
                 // else if (direction == 1) {
                 //     if(y < height) {
                 //        completeAnimationCycle()
                 //     } else {
                 //         y = y + 4;
-                //     }
-                    
-                // } else if (direction == 2) {
-                //     if(x < width) {
-                //        completeAnimationCycle()
-                //     } else {
-                //         x = x + 4;
-                //     }
-                    
+                //     }           
                    
                 // } else if (direction == 3) {
                    
@@ -153,9 +162,9 @@
             socketServer.onmessage = (event) => {
                 console.log("GOT A MESSAGE", event.data)
                 var data_split = event.data.split("|")
-                if (data_split[1] == "Start") {
-
-                    direction = chooseRandomDirection()
+                if (data_split[1] == "Start" || data_split[0] == "SETUP" ) {
+                    console.log("STarting!")
+                    direction = 2
 
                     if (direction == 0) {
                         y = height;
@@ -165,7 +174,7 @@
                         x = width/2;
                     } else if (direction == 2) {
                         x = 0;
-                        y = height/2;
+                        y = 100;
                     } else if (direction == 3) {
                         x = width;
                         y = height/2;
@@ -174,6 +183,7 @@
                     word = data_split[2]
                     // y = height;
                     console.log("Starting animation")
+                    x =0
                     animationIsActive = true;
                 }
             }

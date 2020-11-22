@@ -31,8 +31,8 @@
 
 
 
-        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
-        // let serverUrl = "ws://localhost:3000"
+        // let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        let serverUrl = "ws://localhost:3000"
         let clientRandomId = "34"
 
         const queryString = window.location.search;
@@ -46,7 +46,7 @@
             phone_id = 500
         }
 
-        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/travel");
+        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/sequential");
         let bg;
         let bgs = []
         let animationIsActive = false;
@@ -162,16 +162,19 @@
                 console.log(event.data)
 
 
-                // if (event.data == "RESET") {
-                //     background("black");
+                if (event.data == "RESET") {
+                    background("black");
 
-                // } else if(msg_split[0]=="SETUP") {
+                
+                
+                
+                // else if(msg_split[0]=="SETUP") {
                 //     console.log("Got a setup message loading")
                 //     console.log(`assets/${msg_split[1]}/${msg_split[2]}.png`)
 
                 //     imgBackground = loadImage(`assets/${msg_split[1]}/${msg_split[2]}.png`)
 
-                // } else {
+                } else {
 
 
                 var index = Math.floor(Math.random() * bgs.length - 1);
@@ -186,13 +189,13 @@
                 }
                
 
-                setTimeout(function () {
-                    completeAnimationCycle()
-                    background("black")
-                }, 300)
+                // setTimeout(function () {
+                //     // completeAnimationCycle()
+                //     background("black")
+                // }, 2000)
 
 
-                // }
+                }
 
 
             }
