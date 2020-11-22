@@ -179,8 +179,8 @@
 
                 var index = Math.floor(Math.random() * bgs.length - 1);
                 try {
-               
-               
+                    // img_paths[index].split("/")
+                    word = img_paths.split("/")[2].split(".")[0]
                     background(bgs[index])
                 console.log("Choosing new route")
                 }

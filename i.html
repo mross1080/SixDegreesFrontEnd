@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"
+        integrity="sha512-WIklPM6qPCIp6d3fSSr90j+1unQHUOoWDS4sdTiR8gxUTnyZ8S2Mr8e10sKKJ/bhJgpAa/qG068RDkg6fIlNFA=="
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+    <script>
+
+
+
+
+        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        // let serverUrl = "ws://localhost:3000"
+        let clientRandomId = "34"
+        let animationIsActive = false;
+
+        const queryString = window.location.search;
+        console.log(queryString);
+        const urlParams = new URLSearchParams(queryString);
+        var iterate_speed = Number(urlParams.get('p'))
+
+        if (iterate_speed == "") {
+            iterate_speed = 2
+        }
+
+        // shirt
+        let socketServer = new WebSocket(serverUrl + "/" + iterate_speed + "/travel");
+        console.log(serverUrl + "/" + iterate_speed + "/travel")
+        var img_paths = [
+            'assets/stopthesteal/7life.png',
+            'assets/stopthesteal/assaultrifle.png',
+            'assets/stopthesteal/autumnvibes.png',
+            'assets/stopthesteal/ballot.png',
+            'assets/stopthesteal/believe.png',
+            'assets/stopthesteal/handguns.png',
+            'assets/stopthesteal/happy.png',
+            'assets/stopthesteal/wholesomememes.png',
+            'assets/stopthesteal/washingtondc.png',
+            'assets/stopthesteal/walkaway.png',
+            'assets/stopthesteal/vote.png',
+            'assets/stopthesteal/trumptrain.png',
+            'assets/stopthesteal/tagtrumpflag.png',
+            'assets/stopthesteal/sunrise_and_sunsets.png',
+            'assets/stopthesteal/unsaidwords143.png',
+            'assets/stopthesteal/twinflame.png',
+            'assets/stopthesteal/stylishmen.png',
+            'assets/stopthesteal/sneaky.png',
+            'assets/stopthesteal/signs.png',
+            'assets/stopthesteal/qualitytime.png',
+            'assets/stopthesteal/mood.png',
+            'assets/stopthesteal/mordorfitness.png',
+            'assets/stopthesteal/magasign.png',
+            'assets/stopthesteal/model.png',
+            'assets/stopthesteal/loversforever.png',
+            'assets/stopthesteal/maga2020.png',
+            'assets/stopthesteal/likeforlikes.png',
+            'assets/stopthesteal/instafit.png'
+        ]
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            // frameRate(30);
+            console.log("Completed p5 setup")
+            // let serverUrl = "https://newhorizonsserver.herokuapp.com".replace(/^http/, 'ws')
+
+            socketServer.onopen = function (event) {
+                socketServer.send("Ready!!!!");
+            };
+
+            textFont('sans-serif');
+            // Starts in the middle
+            x = width / 2;
+            y = height;
+            word = ""
+
+            // b6 = loadImage('assets/stc/6.jpg');
+            // b1 = loadImage('assets/sleepyjoe/trump.png');
+
+            // b2 = loadImage('assets/sleepyjoe/sleepyjoe.png');
+            // b3 = loadImage('assets/stc/3.jpg');
+            // b4 = loadImage('assets/stc/4.jpg');
+            // b5 = loadImage('assets/stc/5.jpg');
+
+
+
+            bgs = []
+            for (p of img_paths) {
+                bgs.push(loadImage(p))
+            }
+        }
+        var index = 0;
+
+
+        function chooseRandomDirection() {
+            // return int(random(0, 1))
+            return 2
+        }
+
+        var r = 0;
+        var g = 0;
+        ;
+
+        var xVals = []
+        var yVals = []
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        function completeAnimationCycle() {
+            animationIsActive = false
+            socketServer.send("Words|DONE");
+            background("black")
+        }
+
+        var direction = 2
+        var x1 = 0
+        function draw() {
+
+            // background(r, g, 100);
+            // background(200);
+            // textSize(width / 10);
+            // fill("black")
+            // // for (var y =0; y < 3; y++) {
+
+            //     print(x)
+            //   background("black");
+            //   textSize(width / 6);
+            // fill("black")
+
+
+            //             // }
+            //             try {
+
+
+            //                background(bgs[index])
+            //            }
+            //            catch (err) {
+            //               console.log(err)
+            //               background("grey")
+            //            }
+
+            //             // text(word, x, 100 +Math.floor(Math.random() * 600) + 1);
+            //             text(word, x, y);
+
+
+            if (animationIsActive) {    
+                textSize(width / 6);
+                fill("black")
+
+
+                // }
+                try {
+
+                    console.log("Setting bg image with index ", index)
+                    background(bgs[index])
+                }
+                catch (err) {
+                    console.log(err)
+                    background("grey")
+                }
+
+                // text(word, x, 100 +Math.floor(Math.random() * 600) + 1);
+                text(word, x, y);
+                if (direction == 0) {
+
+                    if (y < 0) {
+                        completeAnimationCycle()
+                    } else {
+                        y = y - 4;
+                    }
+
+
+
+                }
+
+                if (direction == 2) {
+
+                    if (x > (width)) {
+                        console.log("Done")
+                        completeAnimationCycle()
+                    } else {
+
+                        // console.log(x)
+                        // console.log("Current index ", index)
+                        x = x + iterate_speed;
+                    }
+
+                }
+                // else if (direction == 1) {
+                //     if(y < height) {
+                //        completeAnimationCycle()
+                //     } else {
+                //         y = y + 4;
+                //     }           
+
+                // } else if (direction == 3) {
+
+                //     if(x < 0) {
+                //        completeAnimationCycle()
+                //     } else {
+                //         x = x - 4;
+                //     }
+                // }
+
+            }
+
+
+            // Reset to the bottom
+            if (y < 0 && animationIsActive) {
+                console.log("Animation done")
+                animationIsActive = false
+
+                socketServer.send("Words|DONE");
+            }
+
+            socketServer.onmessage = (event) => {
+                console.log("GOT A MESSAGE", event.data)
+                var data_split = event.data.split("|")
+                if (data_split[1] == "Start" || data_split[0] == "SETUP") {
+
+                    index = Math.floor(Math.random() * bgs.length - 1);
+                    console.log("NEW INDEX SHOULD BE ", index)
+                    try {
+
+                        word = img_paths[index].split("/")[2].split(".")[0]
+                        console.log("Word should be ", word)
+                        background(bgs[index])
+                        console.log("Choosing new route")
+                    }
+                    catch (err) {
+                        console.log(err)
+                    }
+                    console.log("STarting!")
+                    direction = 2
+
+                    if (direction == 0) {
+                        y = height;
+                        x = width / 2;
+                    } else if (direction == 1) {
+                        y = 0;
+                        x = width / 2;
+                    } else if (direction == 2) {
+                        x = 0;
+                        y = 100;
+                    } else if (direction == 3) {
+                        x = width;
+                        y = height / 2;
+                    }
+
+                    // word = data_split[2]
+                    // y = height;
+                    console.log("Starting animation")
+                    x = 0
+                    y = 100 + Math.floor(Math.random() * 400)
+                    animationIsActive = true;
+                }
+            }
+
+
+
+        }
+
+    </script>
+</body>
+
+</html>
