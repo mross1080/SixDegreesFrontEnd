@@ -31,19 +31,21 @@
 
 
 
-        // let serverUrl = "wss://sixdegreesserver.herokuapp.com"
-        let serverUrl = "ws://localhost:3000"
+        let serverUrl = "wss://sixdegreesserver.herokuapp.com"
+        // let serverUrl = "ws://localhost:3000"
         let clientRandomId = "34"
 
         const queryString = window.location.search;
         console.log(queryString);
         const urlParams = new URLSearchParams(queryString);
-        const phone_id = urlParams.get('phone_id')
+        const phone_id = urlParams.get('p')
         console.log(phone_id);
         // shirt
-        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/sequential");
+        let socketServer = new WebSocket(serverUrl + "/" + phone_id + "/combined");
         let bg;
         let bgs = []
+        let animationIsActive = false;
+
         function setup() {
             createCanvas(windowWidth, windowHeight);
 
@@ -55,77 +57,139 @@
             };
 
             b6 = loadImage('assets/stc/6.jpg');
-            b1 = loadImage('assets/stc/1.jpg');
+            b1 = loadImage('assets/sleepyjoe/trump.png');
 
-            b2 = loadImage('assets/stc/2.jpg');
+            b2 = loadImage('assets/sleepyjoe/sleepyjoe.png');
             b3 = loadImage('assets/stc/3.jpg');
             b4 = loadImage('assets/stc/4.jpg');
             b5 = loadImage('assets/stc/5.jpg');
 
             bgs = [b1, b2, b3, b4, b5, b6]
-
+            x = width / 2;
+            y = height;
+            word = ""
         }
-
-
-
-
-        var r = 0;
-        var g = 0;
-        ;
-
+        var imgBackground = ""
         function windowResized() {
             resizeCanvas(windowWidth, windowHeight);
+        }
+        function chooseRandomDirection() {
+            return int(random(0, 1))
+        }
+
+        function completeAnimationCycle() {
+            animationIsActive = false
+                        socketServer.send("Words|DONE");
         }
         function draw() {
 
 
-            textSize(32);
+            if (animationIsActive) {
+                background("black")
+                
+            
+            fill("white");
+            textSize(width / 10);
+            text(word, x, y);
+            
+
+
+                // background(200);
+                if (direction == 0) {
+
+                    if(y < 0) {
+                       completeAnimationCycle()
+                    } else {
+                        y = y - 14;
+                    }
+
+
+                    
+                } 
+
+            }
+                
 
             socketServer.onmessage = (event) => {
-
+                var msg_split = event.data.split("|")
                 console.log("Got message")
                 console.log(event.data)
 
 
                 if (event.data == "RESET") {
-                    background("black")
+                    background("black");
+
+                } else if(msg_split[0]=="SETUP") {
+                    console.log("Got a setup message loading")
+                    console.log(`assets/${msg_split[1]}/${msg_split[2]}.png`)
+
+                    imgBackground = loadImage(`assets/${msg_split[1]}/${msg_split[2]}.png`)
+                
                 } else {
 
+                    console.log("Choosing new route")
+
+                    var animation = msg_split[0]
+                    if (animation == "IMGS") {
+                        console.log("In image animation")
+                        var msg = int(msg_split[1]);
+                        var photoTimeout = int(msg_split[2])
+                        var hashtagName = msg_split[3]
+                        var photoIndex = 0
+                        console.log("HASHTAG NAME : ", hashtagName)
+
+                        console.log("photo index", photoIndex)
+                        var back = bgs[photoIndex]
+                        // console.log(`assets/sleepyjoe/${hashtagName}.png`)
+                        // var back =  loadImage(`assets/sleepyjoe/${hashtagName}.png`);
+                        background(imgBackground)
+
+                        // text(hashtagName, 10, 90);
+                        // textSize(32);
+
+                        // text(hashtagName)
+
+                        fill("black");
+            textSize(width / 10);
+            text(hashtagName, 10, 90);
 
 
-                    var msg_split = event.data.split("|")
-                    var msg = int(msg_split[1]);
-                    var photoTimeout = int(msg_split[2])
-                    var photoIndex = int(msg_split[3])
-                    // background(random(0, 255),random(0, 255),random(0, 255));
-                    // var index = int(random(0,4))
-                    console.log(photoIndex)
-                    var back = bgs[photoIndex]
-                    background(back)
-                    // fill(0, 102, 153, 51);
-                    // background(34,int(msg.data),222);
-                    // background(255, 204, 0);
-                    text(msg, 10, 90);
-                    textSize(32);
-
-                    text(msg)
-                    // fill(0, 102, 153);
-                    // setTimeout(function(){
-                    //     text("Its okay ")
-                    //     console.log("you good?")
-                    //     background("black")
 
 
-                    // },photoTimeout)
+                    } else if (animation == "WORDS") {
+                     
+                        console.log("STARTING WORDS");
+                        if (msg_split[1] == "Start") {
+
+                            direction = chooseRandomDirection()
+
+                            if (direction == 0) {
+                                y = height;
+                                x = width / 2;
+                            } else if (direction == 1) {
+                                y = 0;
+                                x = width / 2;
+                            } else if (direction == 2) {
+                                x = 0;
+                                y = height / 2;
+                            } else if (direction == 3) {
+                                x = width;
+                                y = height / 2;
+                            }
+
+                            word = msg_split[2]
+                            // y = height;
+                         
+                            console.log("Starting animation")
+                            animationIsActive = true;
+                        }
+
+                    }
+
                 }
             }
-            r++;
-            // g++;
-            if (r > 255) {
-                r = 0;
-            }
 
-
+        
         }
 
     </script>
