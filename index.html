@@ -27,6 +27,11 @@
         <![endif]-->
 
     <script>
+         setInterval(function() {
+            console.log("refreshing")      
+            window.location.reload();
+
+                }, 60000); 
 
         let serverUrl = "wss://sixdegreesserver.herokuapp.com"
 
