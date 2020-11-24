@@ -28,11 +28,14 @@
 
     <script>
 
-
-
-
         let serverUrl = "wss://sixdegreesserver.herokuapp.com"
-        // let serverUrl = "ws://localhost:3000"
+
+        if (window.location.hostname == "127.0.0.1") {
+            serverUrl = "ws://localhost:3000"
+        } else {
+
+        }
+
         let clientRandomId = "34"
 
         const queryString = window.location.search;
